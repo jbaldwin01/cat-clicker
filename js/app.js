@@ -11,7 +11,8 @@
 		{name: 'Cat 5', clickCount: 0, imgUrl: 'img/cat_picture5.jpg'},
 		{name: 'Cat 6', clickCount: 0, imgUrl: 'img/cat_picture6.jpg'},
 		{name: 'Cat 7', clickCount: 0, imgUrl: 'img/cat_picture7.jpg'}
-		]
+		],
+		showAdmin: false
 	};
 
 	/* =========== Views ========== */
@@ -22,11 +23,13 @@
 		},
 
 		render() {
+			this.catListElement.innerHTML = '';
 			// create a button for each cat
 			let buttons = [];
 			for(cat of octopus.getCats()) {
 				let button = document.createElement('button');
 				button.setAttribute('id', `${cat.name}`);
+				button.setAttribute('type', 'button');
 				button.textContent = cat.name;
 				button.addEventListener('click', (function(cat) {
 					return function() {
@@ -68,12 +71,59 @@
 		}
 	};
 
+	const adminView = {
+		init() {
+			let showAdmin = octopus.isAdminVisible();
+			this.adminFormElem = document.getElementById('admin-form');
+			this.inputNameElem = document.getElementById('input-name');
+			this.inputURLElem = document.getElementById('input-url');
+			this.inputNumClicksElem = document.getElementById('input-num-clicks');
+			
+			this.AdminElem = document.getElementById('admin-button');
+			this.cancelElem = document.getElementById('cancel');
+			this.submitElem = document.getElementById('submit');
+			
+			this.AdminElem.addEventListener('click', function() {
+				octopus.isAdminVisible() ? octopus.setShowAdmin(false) : octopus.setShowAdmin(true);	
+				adminView.render();
+			});
+
+			this.cancelElem.addEventListener('click', function() {
+				octopus.setShowAdmin(false);
+				adminView.render();
+			});
+
+			this.submitElem.addEventListener('click', function() {
+				this.inputNameElem = document.getElementById('input-name');
+				this.inputURLElem = document.getElementById('input-url');
+				this.inputNumClicksElem = document.getElementById('input-num-clicks');
+
+				octopus.setCurrentCatName(this.inputNameElem.value);
+				octopus.setCurrentCatImgUrl(this.inputURLElem.value);
+				octopus.setCurrentCatClicks(this.inputNumClicksElem.value);
+				octopus.setShowAdmin(false);
+				listView.render();
+				displayView.render();
+				adminView.render();
+			});
+		},
+
+		render() {
+			let showAdmin = octopus.isAdminVisible();
+			octopus.isAdminVisible() ? this.adminFormElem.style.visibility = 'visible' : this.adminFormElem.style.visibility = 'hidden';
+			this.inputNameElem.value = octopus.getCurrentCat().name;
+			this.inputURLElem.value = octopus.getCurrentCat().imgUrl;
+			this.inputNumClicksElem.value = octopus.getCurrentCat().clickCount;
+		}
+	};
+
 	/* =========== Octopus ========== */
 	const octopus = {
 		init() {
 			model.currentCat = model.cats[0];
 			listView.init();
 			displayView.init();
+			adminView.init();
 		},
 
 		getCurrentCat() {
@@ -88,6 +138,26 @@
 			model.currentCat = cat;
 		},
 
+		setCurrentCatName(name) {
+			model.currentCat.name = name;
+		},
+
+		setCurrentCatImgUrl(url) {
+			model.currentCat.imgUrl = url;
+		},
+
+		setCurrentCatClicks(num) {
+			model.currentCat.clickCount = num;
+		},
+
+		setShowAdmin(bool) {
+			model.showAdmin = bool;
+		},
+
+		isAdminVisible() {
+			return model.showAdmin ? true : false;
+		},
+
 		incrementCounter() {
 			model.currentCat.clickCount ++;
 			displayView.render();
@@ -95,4 +165,3 @@
 	};
 
 	octopus.init();
-	

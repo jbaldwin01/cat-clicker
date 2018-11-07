@@ -4,15 +4,29 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Cat Clicker</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
 	<div id="catlist"></div>
 	<div id="cat">
-		<h2 id='cat-name'></h2>
-		<div id="cat-counter">0</div> clicks
+		<h2 id="cat-name"></h2>
+		<div id="cat-counter"></div>
    		<img id="cat-img" src="">
   </div>
+  <section>
+    <button type="button" id="admin-button">Admin</button>
+    <form id="admin-form" class="admin-form">
+      <label for="input-name">Cat Name:</label>
+      <input type="text" id="input-name" />
+      <label for="input-url">Img URL:</label>
+      <input type="text" id="input-url" />
+      <label for="input-num-clicks">Click Count:</label>
+      <input type="text" id="input-num-clicks" />
+      <button type="button" id="cancel">Cancel</button>
+      <button type="button" id="submit">Submit</button>
+    </form>
+  </section>
   <script src="js/app.js"></script>
 </body>
 </html>
